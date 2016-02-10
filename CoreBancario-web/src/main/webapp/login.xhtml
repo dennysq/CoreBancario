@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:pe="http://primefaces.org/ui/extensions"
+
+       xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+        <h:head>
+            <f:metadata>
+                <f:viewAction action="#{sessionBean.isLoggedInForwardHome()}" />
+            </f:metadata>
+            <link href="#{facesContext.externalContext.requestContextPath}/css/styles.css" rel="stylesheet"/>
+            <link rel="shortcut icon" type="image/x-icon" href="#{facesContext.externalContext.requestContextPath}/images/favicon.ico"/>
+        </h:head>
+        <h:body >
+            <h:form id="main_form">
+                <p:growl id="growl1" showDetail="true" />
+                <p:spacer height="30px;"/>
+                <p:graphicImage style="display: block; margin-left: auto;margin-right: auto; width: 300px;height: 200px;" value="images/ebank.jpg"   />
+                <p:spacer height="30px;"/>
+                <p:panel id="login_panel" header="Log in" style="width: 300px;" styleClass="center_inline center_block no_border" >
+                    <h:panelGrid columns="2"  cellpadding="5">
+                        <p:outputLabel for="username" value="Usuario:" />
+                        <p:inputText value="#{loginBean.nombreUsuario}" id="username"
+                                     required="true" label="username" requiredMessage="Introduzca el nombre de usuario">
+
+                        </p:inputText>
+                        <p:outputLabel for="password" value="Password:" />
+                        <p:password value="#{loginBean.claveUsuario}" 
+                                    id="password" required="true" 
+                                    validatorMessage="El password debe tener minimo 4 caracteres"
+                                    label="password" 
+                                    requiredMessage="Introduzca la contraseña de usuario" >
+                            <f:validateLength minimum="4" />
+                        </p:password>
+                        <f:facet name="footer" class="center_block">
+                            <p:commandButton value="Acceder" id="login_button" icon="fa fa-sign-in" style="margin: 5px;color: white; background: #009345;" action="#{loginBean.login()}" update="@form" />
+                            <p:commandButton value="Registrarse" id="signup_button" icon="fa fa-angellist" style="margin: 5px;color: white; background: #0071BB; " actionListener="#{loginBean.beginSignUp()}" immediate="true" update="signup_dialog" oncomplete="PF('signup_dialog_var').show();" />
+                        </f:facet>
+                    </h:panelGrid>
+
+
+                    <div  style="background-color: #455A64;border-radius: 5px; padding: 4px;">
+                        <p:panelGrid  >
+                            <p:graphicImage style="padding: 3px;" value="images/facebook.png"/>
+                            <p:graphicImage style="padding: 3px;" value="images/twitter.png"/>
+                            <p:graphicImage style="padding: 3px;" value="images/instagram.png"/>
+                        </p:panelGrid>
+                    </div>
+                </p:panel>
+            </h:form>
+            <p:dialog id="signup_dialog" 
+                      widgetVar="signup_dialog_var" 
+                      modal="true" 
+                      closable="true" 
+                      resizable="false" 
+                      header="Nuevo Usuario" >
+                <h:form id="register_form">
+                    <p:panelGrid columns="1"  styleClass="center_block login-form-container panel-grid-no-border">
+                        <p:inputText id="nombre_signup" title="Solo caracteres alfanuméricos"
+                                     required="true"
+                                     requiredMessage="Ingrese un nombre"
+                                     maxlength="32" styleClass="login-form-input"  placeholder="Nombre de Usuario" value="#{loginBean.nombreUsuarioL}" >
+                            <pe:keyFilter regEx="/[a-z0-9_]/i"/> 
+                        </p:inputText>     
+                        <p:inputText id="identificacion" maxlength="13" styleClass="login-form-input"  
+                                     required="true"
+                                     requiredMessage="Ingrese una identificacion"
+                                     autocomplete="true" placeholder="Cédula/RUC" value="#{loginBean.identificacionUsuario}" >
+                            <pe:keyFilter regEx="/[a-z0-9_\.\-@]/i"/> 
+                        </p:inputText>     
+                        <p:password id="password_signup" maxlength="32" 
+                                    styleClass="login-form-input" 
+                                    required="true"
+                                    requiredMessage="Ingrese un password"
+                                    placeholder="Contraseña" value="#{loginBean.claveUsuarioL}"  lang="es" feedback="true"/>     
+                        <p:inputText id="cuenta" maxlength="20" 
+                                     required="true"
+                                     requiredMessage="Ingrese el numero de cuenta"
+                                     styleClass="login-form-input" autocomplete="true" placeholder="Numero de cuenta" value="#{loginBean.cuentaUsuario}" >
+                            <pe:keyFilter regEx="/[\d]/"/> 
+                        </p:inputText>     
+                        <p:spacer/>
+                        <p:commandButton value="Registrarme" icon="fa fa-check" process="@form"  styleClass="login-form-input" actionListener="#{loginBean.signUp()}" update=":main_form"/>
+                        <p:spacer/>
+                        <f:facet name="footer" class="center_block">
+                            <p:outputLabel value="Al Registrarse acepta nuestros términos y condiciones" style="text-align: center;  color: #455A64;"/>
+                        </f:facet>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+        </h:body>
+    </f:view>
+</html>

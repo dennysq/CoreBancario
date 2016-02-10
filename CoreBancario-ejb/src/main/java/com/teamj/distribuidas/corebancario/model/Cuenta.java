@@ -7,14 +7,17 @@ package com.teamj.distribuidas.corebancario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -44,6 +47,18 @@ public class Cuenta implements Serializable {
     @ManyToOne(optional = false)
     private Cliente cliente;
 
+    @OneToMany(mappedBy = "cuenta", targetEntity = Movimiento.class,
+            fetch = FetchType.LAZY)
+    private List<Movimiento> movimientos;
+
+    public List<Movimiento> getMovimientos() {
+        return movimientos;
+    }
+
+    public void setMovimientos(List<Movimiento> movimientos) {
+        this.movimientos = movimientos;
+    }
+
     public String getNumero() {
         return numero;
     }
@@ -68,7 +83,6 @@ public class Cuenta implements Serializable {
         this.cliente = cliente;
     }
 
-    
     public Integer getId() {
         return id;
     }
@@ -77,7 +91,6 @@ public class Cuenta implements Serializable {
         this.id = id;
     }
 
-   
     public String getTipo() {
         return tipo;
     }
@@ -112,10 +125,5 @@ public class Cuenta implements Serializable {
     public String toString() {
         return "Cuenta{" + "id=" + id + ", numero=" + numero + ", saldo=" + saldo + ", tipo=" + tipo + ", cliente=" + cliente + '}';
     }
-
-    
-
-   
-   
 
 }

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                >
+    <ui:define name="title">Excursion</ui:define>
+    <ui:define name="content">
+            
+        <p:panel class="center_inline no_border" >
+            <h1>Lista de Excursiones</h1>
+            <p:dataTable id="tabla_excursiones" class="center_block"
+                         var="excursion" 
+                         value="#{comentarioBean.excursiones}" 
+                         selectionMode="single" 
+                         rows="6"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         emptyMessage="No hay Excursiones"
+                         selection="#{comentarioBean.excursionSelected}" 
+                         rowKey="#{excursion.id}" 
+                         style="width: 600px;">
+                <p:ajax event="rowSelect"  update="@form"/>
+
+                <p:column headerText="Codigo">
+                    <h:outputText value="#{excursion.id}" />
+                </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{excursion.nombre}" />
+                </p:column>
+                <p:column headerText="Destino">
+                    <h:outputText value="#{excursion.destino}" />
+                </p:column>
+            </p:dataTable>
+            <p:spacer/>
+            
+            <p:spacer/>
+
+        </p:panel>
+        
+    </ui:define>
+</ui:composition>
+

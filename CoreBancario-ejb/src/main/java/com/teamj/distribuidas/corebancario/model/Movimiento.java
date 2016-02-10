@@ -24,8 +24,9 @@ import javax.persistence.Temporal;
  * @author Dennys
  */
 @Entity
-@Table( name = "MOVIMIENTO")
-public class Movimiento implements Serializable{
+@Table(name = "MOVIMIENTO")
+public class Movimiento implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CODIGO_MOVIMIENTO")
@@ -33,7 +34,7 @@ public class Movimiento implements Serializable{
 
     @Column(name = "MONTO", nullable = false)
     private BigDecimal monto;
-    
+
     @Column(name = "FECHA_Y_HORA")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fechaHora;
@@ -43,6 +44,9 @@ public class Movimiento implements Serializable{
 
     @Column(name = "TIPO_MOVIMIENTO", nullable = false)
     private String tipo;
+
+    @Column(name = "DESCRIPCION_MOVIMIENTO")
+    private String descripcion;
 
     @JoinColumn(name = "CODIGO_CUENTA", referencedColumnName = "CODIGO_CUENTA")
     @ManyToOne(optional = false)
@@ -62,6 +66,14 @@ public class Movimiento implements Serializable{
 
     public void setMonto(BigDecimal monto) {
         this.monto = monto;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Date getFechaHora() {
@@ -122,6 +134,5 @@ public class Movimiento implements Serializable{
     public String toString() {
         return "Movimiento{" + "id=" + id + ", monto=" + monto + ", fechaHora=" + fechaHora + ", saldo=" + saldo + ", tipo=" + tipo + ", cuenta=" + cuenta + '}';
     }
-    
-    
+
 }

@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+    <ui:define name="title">Mi mochila de Compras</ui:define>
+    <ui:define name="content">
+        
+        <h:form id="main_form" >   
+            <p:panel class="no_border"  >
+                <h1 class="center_inline">Mi Mochila de Compras</h1>
+                <p:panelGrid columns="2" styleClass="topAligned panel-grid-no-border" style="display:block;" > 
+                    <p:dataScroller  value="#{mochilaCompraBean.detalles}" var="detalle" style="width: 100%;"  >
+                        <h:panelGrid columns="2"  >
+                            <p:graphicImage value="../images/mochila.jpg" width="100" height="100" /> 
+                            
+                                <h:panelGrid columns="2" cellpadding="5" >
+                                    <h:outputText value="Nombre:" />
+                                    <h:outputText value="#{detalle.articulo.nombre}" style="font-weight: bold"/>
+
+                                    <h:outputText value="Precio:" />
+                                    <h:outputText value="#{detalle.articulo.precio}" style="font-weight: bold">
+                                        <f:convertNumber type="currency" currencySymbol="$"/>
+                                    </h:outputText>
+
+                                    <h:outputText value="Stock:" />
+                                    <h:outputText value="#{detalle.articulo.stock}" style="font-weight: bold;color:#3366ff"/>
+
+                                    <h:outputText value="Cantidad:" />
+                                    <p:spinner value="#{detalle.cantidad}" size="6" min="0" max="#{detalle.articulo.stock}" style="font-weight: bold;">
+                                        <p:ajax  listener="#{mochilaCompraBean.actualizarCantidad(detalle)}" process="@this" update="@form" />
+                                    </p:spinner>
+                                </h:panelGrid>
+                        </h:panelGrid>
+                        <p:separator/>
+                    </p:dataScroller>
+                    <p:panel header="Resumen" class="no_border" style="width: 230px;" >
+                        <p:panelGrid columns="2" styleClass="center_block">                            
+                            <p:outputLabel  value="Sutotal:" styleClass="negrita" style="float: right;"/>
+                            <p:outputLabel value="#{mochilaCompraBean.facturaMochila.subtotal}" style="float: right;">
+                                <f:convertNumber currencySymbol="$" type="currency" />
+                            </p:outputLabel>
+                            <p:outputLabel  value="IVA (12%):" styleClass="negrita" style="float: right;"/>
+                            <p:outputLabel value="#{mochilaCompraBean.facturaMochila.subtotal*0.12}" style="float: right;">
+                                <f:convertNumber currencySymbol="$" type="currency"/>
+                            </p:outputLabel>
+                            <p:outputLabel  value="Total:" styleClass="negrita" style="float: right;"/>
+                            <p:outputLabel value="#{mochilaCompraBean.facturaMochila.total}" style="float: right;">
+                                <f:convertNumber currencySymbol="$" type="currency"/>
+                            </p:outputLabel>
+                        </p:panelGrid>
+                        <p:panelGrid id="controllers" columns="3" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+                            <p:commandButton value="Proceder A Comprar" 
+                                             action="factura.xhtml?faces-redirect=true"
+                                             icon="fa fa-thumbs-up">
+                                <p:confirm header="Confirmación" message="¿Está seguro de realizar la compra?" icon="ui-icon-alert" />
+                            </p:commandButton>                 
+                        </p:panelGrid>
+                    </p:panel>                 
+                </p:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

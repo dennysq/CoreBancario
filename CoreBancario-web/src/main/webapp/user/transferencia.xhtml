@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <ui:define name="title">Transferencias</ui:define>
+    <ui:define name="content">
+        <h:form id="main_form">
+            <p:panel class="no_border" >
+                <h1 class="center_inline">Transferencia Directa</h1>
+
+                <p:panelGrid columns="3"  styleClass="no_border center_block panel-grid-no-border"> 
+                    <p:outputLabel value="Cliente de Débito:" class="negrita"/>
+                    <p:outputLabel value="#{transferenciaBean.clienteActual.nombre} #{transferenciaBean.clienteActual.apellido}" />
+                    <p:spacer/>
+                    <p:outputLabel value="Cuenta de Débito:" class="negrita" for="cuentadebito"/>
+                    <h:selectOneMenu value="#{transferenciaBean.idCuentaSeleccionada}"
+                                     id="cuentadebito"
+                                     required="true"
+                                     requiredMessage="Seleccione una cuenta a debitar"
+                                     style="width: 200px;"
+                                     hideNoSelectionOption="true"
+                                     valueChangeListener="#{transferenciaBean.cargarCuentaDebito}"
+                                     >
+                        <f:selectItem itemValue="#{null}" itemLabel="--Seleccione--" noSelectionOption="true"/>
+                        <f:selectItems value="#{transferenciaBean.cuentasDebito}" 
+                                       var="cuenta" 
+                                       itemLabel="#{cuenta.tipo} - #{cuenta.numero}"
+                                       itemValue="#{cuenta.id}"/>
+                        <p:ajax event="valueChange"  update="@form"/>/
+                    </h:selectOneMenu>
+                    <p:spacer/>
+                    <p:outputLabel value="Saldo: " class="negrita"/>
+                    <p:outputLabel value="#{transferenciaBean.cuentaSeleccionada.saldo}" />
+                    <p:spacer/>
+                    <p:outputLabel for="cuenta" value="Cuenta de Crédito:"/>
+                    <p:inputText id="cuenta" 
+                                 value="#{transferenciaBean.cuentaCredito.numero}" 
+                                 required="true"
+                                 maxlength="20"
+                                 requiredMessage="Ingrese una identificación del cliente">
+                        <p:ajax event="blur" listener="#{transferenciaBean.buscarCuenta()}" update="@form"  />
+                    </p:inputText>
+                    <p:spacer/>
+                    <p:outputLabel value="Cliente de Crédito: " class="negrita"/>
+                    <p:outputLabel value="#{transferenciaBean.cuentaCredito.cliente.nombre} #{transferenciaBean.cuentaCredito.cliente.apellido}" />
+                    <p:spacer/>
+                    <p:outputLabel for="monto" value="Monto:"/>
+                    <pe:inputNumber id="monto" 
+                                    required="true"
+                                    requiredMessage="Ingrese un monto"
+                                    value="#{transferenciaBean.monto}" symbol="$ " minValue="0.00" maxValue="100000001.00" decimalSeparator="," thousandSeparator="." >
+                        
+                    </pe:inputNumber>
+                    <p:spacer/>
+                    <p:outputLabel for="descripcion" value="Descripción"/>
+                    <p:inputText id="descripcion" 
+                                 value="#{transferenciaBean.descripcion}" 
+                                 maxlength="200">
+
+                    </p:inputText>
+                    <p:spacer />
+                </p:panelGrid>
+                <p:spacer/>
+                <p:panelGrid id="controllers" columns="1" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+
+                    <p:commandButton value="Transferir" 
+                                     actionListener="#{transferenciaBean.transferir()}" 
+                                     disabled="#{!(transferenciaBean.cuentaEncontrada or transferenciaBean.cuentaSeleccionada.saldo >=transferenciaBean.monto)} "
+                                     update="@form" 
+                                     >
+                        <p:confirm header="Confirmación" message="¿Continuar?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:panel>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+    <ui:define name="title">Factura</ui:define>
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewAction action="#{facturaBean.init()}" />
+        </f:metadata>
+        <h:form id="main_form" >   
+            <p:panel class="no_border"  >
+                <h1 class="center_inline">Factura</h1>
+                <p:panelGrid columns="1" styleClass="center_block panel-grid-no-border" > 
+                    <p:dataTable id="tabla_factura" style="width: 700px;" var="detalle" value="#{facturaBean.factura.detalles}">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="Razon Social" style="text-align: right!important;"/>
+                                <p:column colspan="3" headerText="#{facturaBean.factura.razonSocial}" style="text-align:left!important;"/>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="Ruc" style="text-align:right!important;"/>
+                                <p:column colspan="3" headerText="#{facturaBean.factura.docEmisor}" style="text-align:left!important;"/>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="Fecha Emisión" style="text-align:right!important;"/>
+                                <p:column colspan="3" headerText="#{facturaBean.getFormatedDate(facturaBean.factura.fechaEmision)}" style="text-align:left!important;">
+
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="Dirección:" style="text-align:right!important;"/>
+                                <p:column colspan="3"  headerText="#{facturaBean.factura.direccionEmisor}" style="text-align:left!important;">
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="Secuencial:" style="text-align:right!important;"/>
+                                <p:column colspan="3"  headerText="#{facturaBean.factura.secuencial}" style="text-align:left!important;">
+
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="Nombre"/>
+                                <p:column headerText="Precio U."/>
+                                <p:column headerText="Cantidad"/>
+                                <p:column headerText="Precio T."/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column >
+                            <h:outputText value="#{detalle.articulo.nombre}"/>
+                        </p:column>
+                        <p:column style="text-align:right!important;">
+                            <h:outputText value="#{detalle.articulo.precio}">
+                                <f:convertNumber currencySymbol="$" type="currency" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="text-align:right!important;">
+                            <h:outputText value="#{detalle.cantidad}"/>
+                        </p:column>
+                        <p:column style="text-align:right!important;">
+                            <h:outputText value="#{detalle.cantidad*detalle.articulo.precio}">
+                                <f:convertNumber currencySymbol="$" type="currency" />
+                            </h:outputText>
+                        </p:column>
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right!important;" footerText="Subtotal:"/>
+                                <p:column  style="text-align:right!important;" footerText="$ #{facturaBean.getFormatedDecimal(facturaBean.factura.subtotal)}"/>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right" footerText="Iva:"/>
+                                <p:column style="text-align:right!important;" footerText="$ #{facturaBean.getFormatedDecimal(facturaBean.factura.subtotal*0.12)}"/>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="3" style="text-align:right" footerText="Total:"/>
+                                <p:column style="text-align:right!important;" footerText="$ #{facturaBean.getFormatedDecimal(facturaBean.factura.total)}"/>
+                            </p:row>
+                        </p:columnGroup>
+
+                        <f:facet name="footer">
+                            Generado por ExcursionTOGO
+                        </f:facet>
+
+                    </p:dataTable>
+
+                    <p:spacer />
+
+                    <p:panel >
+                        <p:commandLink id="pdf" value="Descargar PDF" ajax="false">
+                            <pe:exporter type="pdf" target="tabla_factura"  fileName="factura_preview"/>
+                        </p:commandLink>
+
+                        <p:spacer height="20"/>
+
+
+                        <p:commandButton value="Enviar a email" actionListener="#{facturaBean.send()}"/>
+                    </p:panel>
+
+                </p:panelGrid>
+            </p:panel>
+            <p:spacer/>
+        </h:form>
+        
+        
+    </ui:define>
+</ui:composition>
+

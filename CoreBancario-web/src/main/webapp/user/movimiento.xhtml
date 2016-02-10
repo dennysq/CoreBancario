@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                >
+    <ui:define name="title">Movimientos</ui:define>
+    <ui:define name="content">
+        <h:form id="main_form" >   
+            <p:panel class="center_inline no_border" >
+                <h1>Movimientos</h1>
+                <p:spacer/>
+                <p:panelGrid columns="2" styleClass="panel-grid-no-border center_block">
+                    <h:outputLabel value="Cuenta: " class="negrita"/>
+                    <p:selectOneMenu value="#{movimientoBean.idCuentaSeleccionada}"
+                                     style="width: 200px;"
+                                     valueChangeListener="#{movimientoBean.cargarMovimientos}">
+                        <f:selectItem itemValue="#{null}" itemLabel="--Seleccione--" />
+                        <f:selectItems value="#{movimientoBean.cuentas}" 
+                                       var="cuenta" 
+                                       itemLabel="#{cuenta.tipo} - #{cuenta.numero}"
+                                       itemValue="#{cuenta.id}"/>
+                        <p:ajax event="valueChange" update="@form"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                <div></div>
+                <p:spacer height="30"/>
+                <p:dataTable id="tabla_movimiento" class="center_block"
+                             var="movimiento" 
+                             value="#{movimientoBean.movimientos}" 
+
+                             rows="6"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             emptyMessage="No hay movimientos en la cuenta"
+
+                             rowKey="#{movimiento.id}" 
+                             style="width: 800px;">
+                    <p:ajax event="rowSelect"  update="@form"/>
+                    <p:column headerText="Fecha y Hora">
+                        <h:outputText value="#{movimiento.fechaHora}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy" locale="es"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Signo" style="width: 40px;">
+                        <h:outputText value="#{movimientoBean.obtenerSignoTipoMovimiento(movimiento.tipo)}" >
+
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Tipo" >
+                        <h:outputText value="#{movimientoBean.obtenerDescripcionTipoMovimiento(movimiento.tipo)}" >
+
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Monto">
+                        <h:outputText value="#{movimiento.monto}" >
+                            <f:convertNumber currencySymbol="$" type="currency" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Saldo">
+                        <h:outputText value="#{movimiento.saldo}" >
+                            <f:convertNumber currencySymbol="$" type="currency" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{movimiento.descripcion}" >
+
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+                <p:spacer/>
+                <p:spacer/>
+            </p:panel>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+

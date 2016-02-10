@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <ui:define name="title">Reportes</ui:define>
+    <ui:define name="content">
+        <h:form >
+            <p:panel class="center_inline no_border" >
+                <h1>Reportes</h1>
+
+                <p:spacer/>
+                <p:panelGrid id="controllers" columns="1" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+                    <p:commandButton value="Stock" action="#{reporteBean.generarReporteStock()}" icon="fa fa-file-pdf-o" ajax="false"/>
+
+                    <p:commandButton value="Montos" action="#{reporteBean.generarReporteMonto()}" icon="fa fa-file-pdf-o" ajax="false"/>
+                    <p:commandButton rendered="false" value="Factura" action="#{reporteBean.mostrarParametrosFactura()}" icon="fa fa-file-pdf-o" update="@form"/>  
+                    <p:panelGrid columns="2" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+                        <p:outputLabel for="nombre" value="Nombre:" rendered="false" />
+                        <p:inputText id="nombre" maxlength="40" value="#{reporteBean.idFactura}" rendered="false" requiredMessage="Ingrese un nombre válido" />
+                    </p:panelGrid>
+                    <h:commandLink value="Generar Factura" action="#{reporteBean.generarFactura()}" target="_blank" rendered="#{reporteBean.reporteFactura}"/>
+                    <p:commandButton value="Top 5" actionListener="#{reporteBean.mostrarParametrosReporte3()}" icon="fa fa-file-pdf-o" update="@form"/>
+
+                    <p:panelGrid columns="2" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+
+                        <p:calendar id="dateA" mode="inline" value="#{reporteBean.fechaAntes}" rendered="#{reporteBean.reporte3}"/>
+
+                        <p:calendar id="dateD" mode="inline" value="#{reporteBean.fechaDespues}" rendered="#{reporteBean.reporte3}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="Generar Reporte" action="#{reporteBean.generarReporteTop5()}" rendered="#{reporteBean.reporte3}" icon="fa fa-file-pdf-o" ajax="false"/>
+                </p:panelGrid>
+                <p:spacer/>
+                
+            </p:panel>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

@@ -6,12 +6,15 @@
 package com.teamj.distribuidas.corebancario.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -20,7 +23,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "CLIENTE")
-
 public class Cliente implements Serializable {
 
     @Id
@@ -33,12 +35,16 @@ public class Cliente implements Serializable {
 
     @Column(name = "APELLIDO")
     private String apellido;
-    
+
     @Column(name = "IDENTIFICACION", nullable = false)
     private String identificacion;
-    
+
     @Column(name = "CORREO_ELECTRONICO", nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "cliente", targetEntity = Cuenta.class,
+            fetch = FetchType.EAGER)
+    private List<Cuenta> cuentas;
 
     public Integer getId() {
         return id;
@@ -78,6 +84,14 @@ public class Cliente implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setCuentas(List<Cuenta> cuentas) {
+        this.cuentas = cuentas;
+    }
+
+    public List<Cuenta> getCuentas() {
+        return cuentas;
     }
 
     @Override

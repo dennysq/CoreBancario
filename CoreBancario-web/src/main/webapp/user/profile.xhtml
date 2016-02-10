@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:pe="http://primefaces.org/ui/extensions"
+
+                >
+    <ui:define name="title">Excursion</ui:define>
+    <f:metadata>
+        <f:viewAction action="#{usuarioBean.init()}" />
+
+    </f:metadata>
+    <ui:define name="content">
+        <h:form id="main_form">
+            <p:panel class="no_border" >
+                <div class="center_inline">
+                    <h1>Perfil</h1>
+                </div>
+                <p:spacer/>
+                <p:panelGrid columns="2" styleClass="center_block panel-grid-no-border" >
+                    <p:outputLabel for="nombre" value="Nombre de Usuario:"/>
+                    <p:inputText id="nombre" title="Solo caracteres alfanuméricos" 
+                                 maxlength="32"   
+                                 required="true"
+                                 readonly="#{!usuarioBean.modifying}"
+                                 requiredMessage="Ingrese un nombre de usuario"
+                                 placeholder="Nombre de Usuario" 
+                                 value="#{usuarioBean.usuario.nombre}" >
+                        <pe:keyFilter regEx="/[a-z0-9_]/i"/> 
+                    </p:inputText>     
+                    <p:outputLabel for="nombre_completo" value="Nombre Completo:"/>
+                    <p:inputText id="nombre_completo" 
+                                 maxlength="200"  autocomplete="true" 
+                                 readonly="#{!usuarioBean.modifying}"
+                                 placeholder="Nombres Completos" 
+                                 value="#{usuarioBean.usuario.nombreCompleto}" >
+                        <pe:keyFilter regEx="/[a-z_\s]/i"/> 
+                    </p:inputText>     
+                    <p:outputLabel for="correo" value="Correo Electrónico:"/>
+                    <p:inputText id="correo" 
+                                 maxlength="32"   
+                                 readonly="#{!usuarioBean.modifying}"
+                                 required="true"
+                                 requiredMessage="Ingrese un correo electrónico"
+                                 placeholder="Correo" 
+                                 value="#{usuarioBean.usuario.correo}" >
+                        <pe:keyFilter regEx="/[a-z0-9_\.\-@]/i"/> 
+                    </p:inputText>
+                    <p:outputLabel for="password" value="Contraseña:" rendered="false"/>
+                    <p:password id="password" 
+                                maxlength="32"  
+                                rendered="false"
+                                disabled="#{!usuarioBean.modifying}"
+                                required="true"
+                                readonly="#{!usuarioBean.modifying}"
+                                requiredMessage="Ingrese una contraseña"
+                                placeholder="Contraseña" 
+                                value="#{usuarioBean.usuario.password}"   feedback="true"/>     
+                    <p:outputLabel for="telefono" value="Teléfono:"/>
+                    <p:inputText id="telefono" 
+                                 maxlength="32"   
+                                 placeholder="Teléfono" 
+                                 readonly="#{!usuarioBean.modifying}"
+                                 value="#{usuarioBean.usuario.telefono}" >
+                        <pe:keyFilter regEx="/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i"/> 
+                    </p:inputText>
+                    <p:outputLabel for="acerca" value="Acerca de:"/>
+                    <p:inputTextarea id="acerca" rows="8" cols="30"
+                                     readonly="#{!usuarioBean.modifying}"
+                                     value="#{usuarioBean.usuario.acercaDe}"
+                                     placeholder="Cuéntanos acerca de ti"
+                                     maxlength="2000" counterTemplate="{0} caracteres restantes." autoResize="false" />
+                </p:panelGrid>
+                <p:spacer/>
+                <p:panelGrid id="controllers" columns="2" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+                    <p:commandButton value="Aceptar"
+                                     update="@form"
+                                     rendered="#{usuarioBean.modifying}"
+                                     actionListener="#{usuarioBean.update()}" 
+                                     >
+                        <p:confirm header="Confirmación" message="¿Guardar Cambios?" icon="ui-icon-alert" />
+                    </p:commandButton>                 
+                    <p:commandButton value="Cancelar"
+                                     update="@form"
+                                     immediate="true"
+                                     rendered="#{usuarioBean.modifying}"
+                                     actionListener="#{usuarioBean.cancel()}" 
+                                     >
+                    </p:commandButton>                 
+                    <p:commandButton value="Modificar Información"
+                                     update="@form"
+                                     actionListener="#{usuarioBean.beginModification()}" 
+                                     rendered="#{!usuarioBean.modifying}"
+                                     icon="fa fa-edit"/>
+                    <p:commandButton value="Cambiar Contraseña"
+                                     update="@form"
+                                     icon="fa fa-ellipsis-h"
+                                     onclick="PF('chpassword_dialog_var').show();"
+                                     rendered="#{!usuarioBean.modifying}"
+                                     />
+                </p:panelGrid>
+                <p:spacer/>
+            </p:panel>
+        </h:form>
+        <p:dialog id="chpassword_dialog" 
+                  widgetVar="chpassword_dialog_var" 
+                  modal="true" 
+                  closable="true" 
+                  resizable="false" 
+                  header="Cambiar Contraseña" >
+            <h:form id="chpassword_form">
+                <p:panelGrid columns="1"  styleClass="center_block login-form-container panel-grid-no-border">
+
+                    <p:password id="old_pass" maxlength="32" styleClass="login-form-input" required="true" 
+                                requiredMessage="Ingrese la contraseña anterior" placeholder="Antigua Contraseña" value="#{usuarioBean.oldPassword}"  />     
+                    <p:password id="new_pass" maxlength="32" styleClass="login-form-input" required="true" 
+                                requiredMessage="Ingrese una nueva contraseña" placeholder="Nueva Contraseña" value="#{usuarioBean.newPassword}"   feedback="true" match="renew_pass" />     
+                    <p:password id="renew_pass" maxlength="32" styleClass="login-form-input" required="true" 
+                                requiredMessage="Repita la nueva contraseña" placeholder="Repita Nueva Contraseña" value="#{usuarioBean.reNewPassword}"  />     
+                    <p:spacer/>
+                    <p:commandButton value="Cambiar Contraseña" icon="fa fa-pencil-square-o" process="@form"  
+                                     styleClass="login-form-input" 
+                                     actionListener="#{usuarioBean.changePassword()}" 
+                                     update=":main_form"
+                                     oncomplete="PF('chpassword_dialog_var').hide();">
+                        <p:confirm header="Confirmación" message="¿Guardar Cambios?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                    <p:spacer/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+

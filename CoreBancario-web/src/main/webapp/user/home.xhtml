@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                >
+    <ui:define name="title">Consolidado</ui:define>
+    <ui:define name="content">
+        <h:form>
+            <p:panel >
+                <p:panelGrid  columns="1" styleClass="no_border center_block panel-grid-no-border">
+                    <p:spacer/>
+                    <h1 class="center_inline">Consolidado de Cuentas</h1>
+                    <p:spacer/>
+                    <p:dataTable id="tabla_consolidado" 
+                                 var="cuenta" 
+                                 value="#{consolidadoBean.cliente.cuentas}" 
+                                 selectionMode="single" 
+                                 rows="6"
+                                 
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 emptyMessage="No hay cuentas"
+                                 rowKey="#{cuenta.id}" 
+                                 style="width: 600px;">
+                        <p:ajax event="rowSelect"  update="@form"/>
+
+                        <p:column headerText="Número">
+                            <h:outputText value="#{cuenta.numero}" />
+                        </p:column>
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{consolidadoBean.getTipoCuenta(cuenta.tipo)}" />
+                        </p:column>
+                        <p:column headerText="Saldo Disponible">
+                            <h:outputText value="#{cuenta.saldo}" >
+                                <f:convertNumber currencySymbol="$" type="currency" />
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:spacer/>
+                </p:panelGrid>
+            </p:panel>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

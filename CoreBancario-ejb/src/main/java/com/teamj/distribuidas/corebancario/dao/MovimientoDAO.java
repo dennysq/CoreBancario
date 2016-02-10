@@ -6,7 +6,6 @@
 package com.teamj.distribuidas.corebancario.dao;
 
 import com.persist.common.dao.DefaultGenericDAOImple;
-import com.teamj.distribuidas.corebancario.model.Empleado;
 import com.teamj.distribuidas.corebancario.model.Movimiento;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;

@@ -1,0 +1,193 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 18, 2015, 12:59:33 AM
+    Author     : Dennys
+*/
+.header-wrap {
+    width: 100%;
+    height: 220px;
+    background-color: #111;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position: center center;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    position: relative;
+}
+#footer2{ 
+    background:#DB8A8A; 
+    position:absolute; 
+    bottom:0; 
+    width:100%; 
+    height:100px; 
+}
+#header {
+    height: 40px;
+
+    text-align: left;
+    background-repeat: repeat-x;
+    background: #CFD8DC;
+    background-color: #CFD8DC;
+}
+#footer {
+    background-color: #455A64;
+    height: 60px;
+
+    bottom: 0;
+    
+    padding: 5px;
+    text-align: center;
+    width: 99%;
+    left: 0px;
+    right:  0px;
+
+
+}
+/*html, body {
+    margin: 0;
+    padding: 0;
+}*/
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Diavlo Light, Verdana, Geneva, sans-serif;
+    font-size: small;
+    background-image: url("../images/brickwall.png");
+    background-repeat: repeat;
+
+}
+.main_content{
+    width: 1000px;
+    min-height:    80vh;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.centered_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.centered_parent {
+    position: relative;
+}
+.centered_child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.center_inline{
+
+    text-align: center;
+}
+.center_block{
+    margin: 0 auto;
+
+}
+.no_border{
+
+    border: none;
+}
+.panel-grid-no-border.ui-panelgrid>*>tr,
+.panel-grid-no-border.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+}
+.login-form-input{
+    width: 300px; 
+    padding: 10px;   
+}
+.login-form-container{
+    width: 300px; 
+
+    padding: 32px;   
+}
+.parent-element {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.element {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.absolute-center {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+.parent {
+    display: table;
+    /* optional, just for the demo */
+    height: 300px;
+    background: yellow;  
+}
+.child {
+    display: table-cell;
+    vertical-align: middle;
+    /* optional, just for the demo */
+    background: red;	
+}
+.background-primary-color{
+    background: #009345;
+    /*background-color: lightblue;*/
+}
+.background-secondary-color{
+    background: #0071BB;
+}
+.centeredMenuBar.ui-menubar {
+    /*text-align: center;*/
+
+    height: 50px;
+
+    border-radius: 0;
+    /*background: #0071BB;*/
+
+}
+.topAligned td{
+    vertical-align: top;
+}
+
+.centeredMenuBar .ui-menu-list {
+    /*display: inline-block;*/
+    width: 1000px;
+    margin-left: auto;
+    margin-right:  auto;
+    margin-top: 10px;
+
+}
+.rigth_text{
+    text-align: right;
+
+}
+.negrita{
+    font-weight: bold;
+}
+.colored {
+    
+    color: #ff9900;
+    
+}
+/*div {
+    -webkit-animation: mymove 5s 1;  Chrome, Safari, Opera 
+    animation: mymove 5s 1;
+}*/
+/* Chrome, Safari, Opera */
+/*@-webkit-keyframes mymove {
+    
+    0%  {background-color:yellow; bottom: -200px; top:0px;}
+    100% {background-color:red; left:0px; top:0px;}
+}
+
+ Standard syntax 
+@keyframes mymove {
+    100%  {background-color:yellow; bottom: -200px;}
+    
+}*/
