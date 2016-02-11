@@ -16,7 +16,7 @@
                 <p:spacer/>
                 <p:panelGrid columns="2" styleClass="panel-grid-no-border center_block">
                     <h:outputLabel value="Cuenta: " class="negrita"/>
-                    <p:selectOneMenu value="#{movimientoBean.idCuentaSeleccionada}"
+                    <h:selectOneMenu value="#{movimientoBean.idCuentaSeleccionada}"
                                      style="width: 200px;"
                                      valueChangeListener="#{movimientoBean.cargarMovimientos}">
                         <f:selectItem itemValue="#{null}" itemLabel="--Seleccione--" />
@@ -25,7 +25,7 @@
                                        itemLabel="#{cuenta.tipo} - #{cuenta.numero}"
                                        itemValue="#{cuenta.id}"/>
                         <p:ajax event="valueChange" update="@form"/>
-                    </p:selectOneMenu>
+                    </h:selectOneMenu>
                 </p:panelGrid>
                 <div></div>
                 <p:spacer height="30"/>
@@ -43,7 +43,7 @@
                     <p:ajax event="rowSelect"  update="@form"/>
                     <p:column headerText="Fecha y Hora">
                         <h:outputText value="#{movimiento.fechaHora}" >
-                            <f:convertDateTime pattern="dd/MM/yyyy" locale="es"/>
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es"/>
                         </h:outputText>
                     </p:column>
                     <p:column headerText="Signo" style="width: 40px;">

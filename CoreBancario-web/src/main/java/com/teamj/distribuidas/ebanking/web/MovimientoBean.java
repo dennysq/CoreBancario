@@ -77,13 +77,12 @@ public class MovimientoBean implements Serializable {
     }
 
     public void cargarMovimientos(ValueChangeEvent event) {
-        if (this.idCuentaSeleccionada != null) {
-            this.movimientos = this.cuentaServicio.obtenerMovimientosPorCuenta(idCuentaSeleccionada);
+        if (event.getNewValue() != null) {
+            this.movimientos = this.cuentaServicio.obtenerMovimientosPorCuenta((Integer) event.getNewValue());
         } else {
             if (this.movimientos != null) {
                 this.movimientos.clear();
             }
-            System.out.println("null");
         }
     }
 
@@ -96,8 +95,12 @@ public class MovimientoBean implements Serializable {
             return "Retiro";
 
         }
-        if (tipo.equals("TR")) {
-            return "Transferencia";
+        if (tipo.equals("TC")) {
+            return "Transf. Acreditada";
+
+        }
+        if (tipo.equals("TD")) {
+            return "Transf. Debitada";
 
         }
         if (tipo.equals("SA")) {
@@ -109,7 +112,7 @@ public class MovimientoBean implements Serializable {
     }
 
     public String obtenerSignoTipoMovimiento(String tipo) {
-        if (tipo.equals("DE")) {
+        if (tipo.equals("DE") || tipo.equals("TC")) {
             return "+";
         }
         return "-";

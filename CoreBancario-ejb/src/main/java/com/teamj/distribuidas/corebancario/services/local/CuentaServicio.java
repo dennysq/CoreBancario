@@ -55,25 +55,28 @@ public class CuentaServicio {
 
         debito.setSaldo(debito.getSaldo().subtract(monto));
         credito.setSaldo(credito.getSaldo().add(monto));
+
         try {
-            this.cuentaDAO.update(debito);
-            this.cuentaDAO.update(credito);
+            Date date = new Date();
+            Cuenta deb = this.cuentaDAO.update(debito);
+            Cuenta cred = this.cuentaDAO.update(credito);
             Movimiento mdebito = new Movimiento();
-            mdebito.setCuenta(debito);
-            mdebito.setFechaHora(new Date());
+            mdebito.setCuenta(deb);
+            mdebito.setFechaHora(date);
             mdebito.setMonto(monto);
             mdebito.setTipo("TD");
             mdebito.setSaldo(debito.getSaldo());
             mdebito.setDescripcion(desc);
             Movimiento mcredito = new Movimiento();
-            mcredito.setCuenta(credito);
-            mcredito.setFechaHora(new Date());
+            mcredito.setCuenta(cred);
+            mcredito.setFechaHora(date);
             mcredito.setMonto(monto);
             mcredito.setTipo("TC");
             mcredito.setSaldo(credito.getSaldo());
             mcredito.setDescripcion(desc);
             this.movimientoDAO.insert(mdebito);
             this.movimientoDAO.insert(mcredito);
+            
         } catch (Exception e) {
             throw new ValidationException(e.getMessage());
         }

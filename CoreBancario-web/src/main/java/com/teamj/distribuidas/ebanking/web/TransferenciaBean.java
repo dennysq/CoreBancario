@@ -136,7 +136,8 @@ public class TransferenciaBean implements Serializable {
 
     public void cargarCuentaDebito(ValueChangeEvent event) {
         for (Cuenta c : this.cuentasDebito) {
-            if (c.getId().equals(idCuentaSeleccionada)) {
+
+            if (c.getId().equals((Integer) event.getNewValue())) {
                 cuentaSeleccionada = c;
                 break;
             }
@@ -147,11 +148,23 @@ public class TransferenciaBean implements Serializable {
         if (cuentaCredito.getNumero() != null) {
             Cuenta temp = this.cuentaServicio.obtenerCuentaPorNumero(cuentaCredito.getNumero());
             if (temp != null) {
-                cuentaEncontrada = true;
-                this.cuentaCredito = temp;
+                if (!cuentaSeleccionada.equals(temp)) {
+                    cuentaEncontrada = true;
+                    this.cuentaCredito = temp;
+                } else {
+                    cuentaEncontrada = false;
+                    if (this.cuentaCredito.getCliente() != null) {
+                        this.cuentaCredito.setCliente(null);
+                    }
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El número de cuenta a la que desea acreditar es la misma cuenta seleccionada de debito"));
+                }
+
             } else {
 
                 cuentaEncontrada = false;
+                if (this.cuentaCredito.getCliente() != null) {
+                    this.cuentaCredito.setCliente(null);
+                }
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El número de cuenta no existe"));
             }
         }
@@ -159,7 +172,19 @@ public class TransferenciaBean implements Serializable {
 
     public void transferir() {
         try {
-            this.cuentaServicio.transferir(descripcion, monto, cuentaSeleccionada, cuentaCredito);
+            if (!cuentaEncontrada) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "La cuenta a acreditar no existe"));
+            } else if (cuentaSeleccionada.getSaldo().floatValue() < monto.floatValue()) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El saldo es insuficiente"));
+            } else {
+                this.cuentaServicio.transferir(descripcion, monto, cuentaSeleccionada, cuentaCredito);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "La transferencia se ha realziado correctamente"));
+                this.cuentaCredito.setCliente(null);
+                this.cuentaEncontrada = false;
+                this.monto = BigDecimal.ZERO;
+                this.descripcion = "";
+                this.cuentaCredito.setNumero("");
+            }
         } catch (ValidationException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error No Controlado", e.getMessage()));
 
