@@ -7,6 +7,7 @@ package com.teamj.distribuidas.corebancario.services.remote;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
 /**
@@ -14,7 +15,7 @@ import javax.ejb.Stateless;
  * @author Dennys
  */
 @Stateless
-
+@Remote(RemoteInterface.class)
 public class RemoteBean implements RemoteInterface {
 
     private List<String> values = new ArrayList();

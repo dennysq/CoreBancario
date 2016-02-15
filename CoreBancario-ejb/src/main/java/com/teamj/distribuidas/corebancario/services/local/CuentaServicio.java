@@ -7,7 +7,6 @@ package com.teamj.distribuidas.corebancario.services.local;
 
 import com.teamj.distribuidas.corebancario.dao.CuentaDAO;
 import com.teamj.distribuidas.corebancario.dao.MovimientoDAO;
-import com.teamj.distribuidas.corebancario.model.Cliente;
 import com.teamj.distribuidas.corebancario.model.Cuenta;
 import com.teamj.distribuidas.corebancario.model.Movimiento;
 import com.teamj.distribuidas.corebancario.validation.ValidationException;
