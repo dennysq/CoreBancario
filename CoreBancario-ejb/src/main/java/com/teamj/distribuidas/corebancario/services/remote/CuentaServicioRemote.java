@@ -12,6 +12,7 @@ import com.teamj.distribuidas.corebancario.model.Movimiento;
 import com.teamj.distribuidas.corebancario.validation.ValidationException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -76,4 +77,18 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
             throw new ValidationException(e.getMessage());
         }
     }
+
+    @Override
+    public Cuenta obtenerCuenta(String numeroCuenta, String tipoCuenta) throws ValidationException {
+        Cuenta c = new Cuenta();
+        c.setTipo(tipoCuenta);
+        c.setNumero(numeroCuenta);
+        List<Cuenta> temp = this.cuentaDAO.find(c);
+        if (temp != null && temp.size() == 1) {
+            return temp.get(0);
+        }
+        return null;
+
+    }
+
 }

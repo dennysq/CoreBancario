@@ -20,4 +20,6 @@ public interface CuentaServicioInterface {
     public void deposito(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException;
 
     public void retiro(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException;
+    
+    public Cuenta obtenerCuenta(String numeroCuenta, String tipoCuenta) throws ValidationException;
 }
