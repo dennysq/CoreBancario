@@ -41,7 +41,7 @@
                              rowKey="#{movimiento.id}" 
                              style="width: 800px;">
                     <p:ajax event="rowSelect"  update="@form"/>
-                    <p:column headerText="Fecha y Hora">
+                    <p:column headerText="Fecha y Hora"  style="width: 140px;" >
                         <h:outputText value="#{movimiento.fechaHora}" >
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es"/>
                         </h:outputText>
@@ -51,18 +51,18 @@
 
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Tipo" >
+                    <p:column headerText="Tipo"  style="width: 120px;">
                         <h:outputText value="#{movimientoBean.obtenerDescripcionTipoMovimiento(movimiento.tipo)}" >
 
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Monto">
-                        <h:outputText value="#{movimiento.monto}" >
+                    <p:column headerText="Monto" style="width: 60px; ">
+                        <h:outputText value="#{movimiento.monto}" style=" float: right;">
                             <f:convertNumber currencySymbol="$" type="currency" />
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Saldo">
-                        <h:outputText value="#{movimiento.saldo}" >
+                    <p:column headerText="Saldo"  style="width: 60px;">
+                        <h:outputText value="#{movimiento.saldo}" style=" float: right;">
                             <f:convertNumber currencySymbol="$" type="currency" />
                         </h:outputText>
                     </p:column>
