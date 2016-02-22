@@ -30,6 +30,8 @@ public class ClienteServicioRemote implements ClienteServicioInterface {
 
     @Override
     public Cliente obtenerClientePorIdentificacion(String identificacion) {
+       System.out.println("Obteniendo cliente...");
+        System.out.println("Datos Ingresados "+identificacion);
         Cliente c = new Cliente();
         c.setIdentificacion(identificacion);
         List<Cliente> clientes = this.clienteDAO.find(c);

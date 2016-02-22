@@ -68,6 +68,10 @@ public class ClienteServicio {
         Cliente temp = obtenerClientePorIdentificacion(identificacion);
         Cuenta cuenta = new Cuenta();
         cuenta.setCliente(temp);
-        return this.cuentaDAO.find(cuenta);
+        List<Cuenta> cuentas = this.cuentaDAO.find(cuenta);
+        for (int i = 0; i < cuentas.size(); i++) {
+            this.cuentaDAO.refresh(cuentas.get(i));
+        }
+        return cuentas;
     }
 }

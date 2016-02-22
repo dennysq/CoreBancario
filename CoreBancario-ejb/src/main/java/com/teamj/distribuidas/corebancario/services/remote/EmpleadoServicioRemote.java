@@ -25,6 +25,9 @@ public class EmpleadoServicioRemote implements EmpleadoServicioInterface {
 
     @Override
     public boolean login(String nombreUsuario, String password) {
+        System.out.println("Login Empleado...");
+        System.out.println("Datos Ingresados " + nombreUsuario + password);
+
         Empleado empleado = new Empleado();
         empleado.setNombreUsuario(nombreUsuario);
         empleado.setPassword(password);

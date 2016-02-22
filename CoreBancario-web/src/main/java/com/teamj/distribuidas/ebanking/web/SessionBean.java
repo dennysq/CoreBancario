@@ -19,7 +19,7 @@ import javax.faces.context.FacesContext;
 @SessionScoped
 public class SessionBean implements Serializable {
 
-    public static final String HOME_PAGE_REDIRECT = "/user/home.xhtml?faces-redirect=true";
+    public static final String HOME_PAGE_REDIRECT = "/user/consolidado.xhtml?faces-redirect=true";
     public static final String LOGOUT_PAGE_REDIRECT = "/login.xhtml?faces-redirect=true";
 
     private Usuario user;

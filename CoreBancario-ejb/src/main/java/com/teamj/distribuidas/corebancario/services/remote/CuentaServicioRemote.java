@@ -12,7 +12,6 @@ import com.teamj.distribuidas.corebancario.model.Movimiento;
 import com.teamj.distribuidas.corebancario.validation.ValidationException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
@@ -33,7 +32,8 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
 
     @Override
     public boolean deposito(String numeroCuenta, String tipoCuenta, String montoString, String fecha) throws ValidationException {
-
+        System.out.println("Realizando deposito...");
+        System.out.println("Datos Ingresados" + numeroCuenta + " " + tipoCuenta + " " + montoString + " " + fecha);
         Cuenta cuenta = new Cuenta();
         cuenta.setNumero(numeroCuenta);
         cuenta.setTipo(tipoCuenta);
@@ -55,8 +55,9 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
                 mcredito.setMonto(monto);
                 mcredito.setTipo("DE");
                 mcredito.setSaldo(cred.getSaldo());
-                mcredito.setDescripcion("OP. VENTANILLA");
+                mcredito.setDescripcion("OP. VENTANILLA DEPOSITO");
                 this.movimientoDAO.insert(mcredito);
+                
                 return true;
             } catch (Exception e) {
                 return false;
@@ -68,6 +69,8 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
 
     @Override
     public boolean retiro(String numeroCuenta, String tipoCuenta, String montoString, String fecha) throws ValidationException {
+        System.out.println("Realizando retiro...");
+        System.out.println("Datos Ingresados" + numeroCuenta + " " + tipoCuenta + " " + montoString + " " + fecha);
         Cuenta cuenta = new Cuenta();
         cuenta.setNumero(numeroCuenta);
         cuenta.setTipo(tipoCuenta);
@@ -75,7 +78,7 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
         if (temp != null && temp.size() == 1) {
             cuenta = temp.get(0);
             BigDecimal monto = new BigDecimal(montoString);
-            if (monto.floatValue() > cuenta.getSaldo().floatValue()) {
+            if (monto.floatValue() <= cuenta.getSaldo().floatValue()) {
 
                 cuenta.setSaldo(cuenta.getSaldo().subtract(monto));
 
@@ -89,7 +92,7 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
                     mdebito.setMonto(monto);
                     mdebito.setTipo("RE");
                     mdebito.setSaldo(deb.getSaldo());
-                    mdebito.setDescripcion("OP. VENTANILLA");
+                    mdebito.setDescripcion("OP. VENTANILLA RETIRO");
                     this.movimientoDAO.insert(mdebito);
                     return true;
                 } catch (Exception e) {
@@ -102,6 +105,8 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
 
     @Override
     public Cuenta obtenerCuenta(String numeroCuenta, String tipoCuenta) throws ValidationException {
+        System.out.println("Obteniendo Cuenta...");
+        System.out.println("Datos Ingresados: " + numeroCuenta + " " + tipoCuenta);
         Cuenta c = new Cuenta();
         c.setTipo(tipoCuenta);
         c.setNumero(numeroCuenta);
