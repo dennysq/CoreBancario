@@ -31,51 +31,65 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
     MovimientoDAO movimientoDAO;
 
     @Override
-    public boolean deposito(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException {
+    public boolean deposito(String numeroCuenta, String tipoCuenta, BigDecimal monto) throws ValidationException {
 
-        cuenta.setSaldo(cuenta.getSaldo().add(monto));
-
-        try {
-            Date date = new Date();
-
-            Cuenta cred = this.cuentaDAO.update(cuenta);
-
-            Movimiento mcredito = new Movimiento();
-            mcredito.setCuenta(cred);
-            mcredito.setFechaHora(date);
-            mcredito.setMonto(monto);
-            mcredito.setTipo("DE");
-            mcredito.setSaldo(cred.getSaldo());
-            mcredito.setDescripcion(desc);
-            this.movimientoDAO.insert(mcredito);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
-    }
-
-    @Override
-    public boolean retiro(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException {
-        if (monto.floatValue() > cuenta.getSaldo().floatValue()) {
-            cuenta.setSaldo(cuenta.getSaldo().subtract(monto));
+        Cuenta cuenta = new Cuenta();
+        cuenta.setNumero(numeroCuenta);
+        cuenta.setTipo(tipoCuenta);
+        List<Cuenta> temp = this.cuentaDAO.find(cuenta);
+        if (temp != null && temp.size() == 1) {
+            cuenta = temp.get(0);
+            cuenta.setSaldo(cuenta.getSaldo().add(monto));
 
             try {
                 Date date = new Date();
-                Cuenta deb = this.cuentaDAO.update(cuenta);
 
-                Movimiento mdebito = new Movimiento();
-                mdebito.setCuenta(deb);
-                mdebito.setFechaHora(date);
-                mdebito.setMonto(monto);
-                mdebito.setTipo("RE");
-                mdebito.setSaldo(deb.getSaldo());
-                mdebito.setDescripcion(desc);
+                Cuenta cred = this.cuentaDAO.update(cuenta);
 
-                this.movimientoDAO.insert(mdebito);
+                Movimiento mcredito = new Movimiento();
+                mcredito.setCuenta(cred);
+                mcredito.setFechaHora(date);
+                mcredito.setMonto(monto);
+                mcredito.setTipo("DE");
+                mcredito.setSaldo(cred.getSaldo());
+                mcredito.setDescripcion("OP. VENTANILLA");
+                this.movimientoDAO.insert(mcredito);
                 return true;
             } catch (Exception e) {
-                throw new ValidationException(e.getMessage());
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean retiro(String numeroCuenta, String tipoCuenta, BigDecimal monto) throws ValidationException {
+        Cuenta cuenta = new Cuenta();
+        cuenta.setNumero(numeroCuenta);
+        cuenta.setTipo(tipoCuenta);
+        List<Cuenta> temp = this.cuentaDAO.find(cuenta);
+        if (temp != null && temp.size() == 1) {
+            cuenta = temp.get(0);
+            if (monto.floatValue() > cuenta.getSaldo().floatValue()) {
+
+                cuenta.setSaldo(cuenta.getSaldo().subtract(monto));
+
+                try {
+                    Date date = new Date();
+                    Cuenta deb = this.cuentaDAO.update(cuenta);
+                    Movimiento mdebito = new Movimiento();
+                    mdebito.setCuenta(deb);
+                    mdebito.setFechaHora(date);
+                    mdebito.setMonto(monto);
+                    mdebito.setTipo("RE");
+                    mdebito.setSaldo(deb.getSaldo());
+                    mdebito.setDescripcion("OP. VENTANILLA");
+                    this.movimientoDAO.insert(mdebito);
+                    return true;
+                } catch (Exception e) {
+                    throw new ValidationException(e.getMessage());
+                }
             }
         }
         return false;

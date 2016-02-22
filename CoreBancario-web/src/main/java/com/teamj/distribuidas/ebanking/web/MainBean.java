@@ -19,12 +19,32 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 @ManagedBean
 public class MainBean {
 
+    private String webSocketIp;
+    private String webSocketPort;
+
+    public String getWebSocketIp() {
+        return webSocketIp;
+    }
+
+    public void setWebSocketIp(String WebSocketIp) {
+        this.webSocketIp = WebSocketIp;
+    }
+
+    public void setWebSocketPort(String webSocketPort) {
+        this.webSocketPort = webSocketPort;
+    }
+
+    public String getWebSocketPort() {
+        return webSocketPort;
+    }
+
     @PostConstruct
     public void init() {
         BeanUtilsBean beanUtilsBean = BeanUtilsBean.getInstance();
         beanUtilsBean.getConvertUtils().register(
                 new org.apache.commons.beanutils.converters.BigDecimalConverter(null), BigDecimal.class);
-
+        webSocketIp = "192.168.1.143";
+        webSocketPort = "8082";
     }
 
 }
