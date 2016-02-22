@@ -31,7 +31,7 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
     MovimientoDAO movimientoDAO;
 
     @Override
-    public void deposito(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException {
+    public boolean deposito(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException {
 
         cuenta.setSaldo(cuenta.getSaldo().add(monto));
 
@@ -48,34 +48,37 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
             mcredito.setSaldo(cred.getSaldo());
             mcredito.setDescripcion(desc);
             this.movimientoDAO.insert(mcredito);
-
+            return true;
         } catch (Exception e) {
-            throw new ValidationException(e.getMessage());
+            return false;
         }
+
     }
 
     @Override
-    public void retiro(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException {
+    public boolean retiro(Cuenta cuenta, BigDecimal monto, String desc) throws ValidationException {
+        if (monto.floatValue() > cuenta.getSaldo().floatValue()) {
+            cuenta.setSaldo(cuenta.getSaldo().subtract(monto));
 
-        cuenta.setSaldo(cuenta.getSaldo().subtract(monto));
+            try {
+                Date date = new Date();
+                Cuenta deb = this.cuentaDAO.update(cuenta);
 
-        try {
-            Date date = new Date();
-            Cuenta deb = this.cuentaDAO.update(cuenta);
+                Movimiento mdebito = new Movimiento();
+                mdebito.setCuenta(deb);
+                mdebito.setFechaHora(date);
+                mdebito.setMonto(monto);
+                mdebito.setTipo("RE");
+                mdebito.setSaldo(deb.getSaldo());
+                mdebito.setDescripcion(desc);
 
-            Movimiento mdebito = new Movimiento();
-            mdebito.setCuenta(deb);
-            mdebito.setFechaHora(date);
-            mdebito.setMonto(monto);
-            mdebito.setTipo("RE");
-            mdebito.setSaldo(deb.getSaldo());
-            mdebito.setDescripcion(desc);
-
-            this.movimientoDAO.insert(mdebito);
-
-        } catch (Exception e) {
-            throw new ValidationException(e.getMessage());
+                this.movimientoDAO.insert(mdebito);
+                return true;
+            } catch (Exception e) {
+                throw new ValidationException(e.getMessage());
+            }
         }
+        return false;
     }
 
     @Override
