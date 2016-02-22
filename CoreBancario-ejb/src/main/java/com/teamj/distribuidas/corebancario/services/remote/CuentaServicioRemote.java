@@ -11,6 +11,7 @@ import com.teamj.distribuidas.corebancario.model.Cuenta;
 import com.teamj.distribuidas.corebancario.model.Movimiento;
 import com.teamj.distribuidas.corebancario.validation.ValidationException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -31,7 +32,7 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
     MovimientoDAO movimientoDAO;
 
     @Override
-    public boolean deposito(String numeroCuenta, String tipoCuenta, BigDecimal monto) throws ValidationException {
+    public boolean deposito(String numeroCuenta, String tipoCuenta, String montoString, String fecha) throws ValidationException {
 
         Cuenta cuenta = new Cuenta();
         cuenta.setNumero(numeroCuenta);
@@ -39,16 +40,18 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
         List<Cuenta> temp = this.cuentaDAO.find(cuenta);
         if (temp != null && temp.size() == 1) {
             cuenta = temp.get(0);
+            BigDecimal monto = new BigDecimal(montoString);
+
             cuenta.setSaldo(cuenta.getSaldo().add(monto));
 
             try {
-                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
 
                 Cuenta cred = this.cuentaDAO.update(cuenta);
 
                 Movimiento mcredito = new Movimiento();
                 mcredito.setCuenta(cred);
-                mcredito.setFechaHora(date);
+                mcredito.setFechaHora(sdf.parse(fecha));
                 mcredito.setMonto(monto);
                 mcredito.setTipo("DE");
                 mcredito.setSaldo(cred.getSaldo());
@@ -64,23 +67,25 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
     }
 
     @Override
-    public boolean retiro(String numeroCuenta, String tipoCuenta, BigDecimal monto) throws ValidationException {
+    public boolean retiro(String numeroCuenta, String tipoCuenta, String montoString, String fecha) throws ValidationException {
         Cuenta cuenta = new Cuenta();
         cuenta.setNumero(numeroCuenta);
         cuenta.setTipo(tipoCuenta);
         List<Cuenta> temp = this.cuentaDAO.find(cuenta);
         if (temp != null && temp.size() == 1) {
             cuenta = temp.get(0);
+            BigDecimal monto = new BigDecimal(montoString);
             if (monto.floatValue() > cuenta.getSaldo().floatValue()) {
 
                 cuenta.setSaldo(cuenta.getSaldo().subtract(monto));
 
                 try {
-                    Date date = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
+
                     Cuenta deb = this.cuentaDAO.update(cuenta);
                     Movimiento mdebito = new Movimiento();
                     mdebito.setCuenta(deb);
-                    mdebito.setFechaHora(date);
+                    mdebito.setFechaHora(sdf.parse(fecha));
                     mdebito.setMonto(monto);
                     mdebito.setTipo("RE");
                     mdebito.setSaldo(deb.getSaldo());

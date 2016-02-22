@@ -17,9 +17,9 @@ import javax.ejb.Remote;
 @Remote
 public interface CuentaServicioInterface {
 
-    public boolean deposito(String numeroCuenta, String tipoCuenta , BigDecimal monto) throws ValidationException;
+    public boolean deposito(String numeroCuenta, String tipoCuenta , String montoString,String fecha) throws ValidationException;
 
-    public boolean retiro(String numeroCuenta, String tipoCuenta , BigDecimal monto) throws ValidationException;
+    public boolean retiro(String numeroCuenta, String tipoCuenta , String montoString,String fecha) throws ValidationException;
     
     public Cuenta obtenerCuenta(String numeroCuenta, String tipoCuenta) throws ValidationException;
 }
