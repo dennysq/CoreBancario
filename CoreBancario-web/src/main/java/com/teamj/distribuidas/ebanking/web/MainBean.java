@@ -43,7 +43,7 @@ public class MainBean {
         BeanUtilsBean beanUtilsBean = BeanUtilsBean.getInstance();
         beanUtilsBean.getConvertUtils().register(
                 new org.apache.commons.beanutils.converters.BigDecimalConverter(null), BigDecimal.class);
-        webSocketIp = "10.9.9.127";
+        webSocketIp = "192.168.100.2";
         webSocketPort = "8082";
     }
 

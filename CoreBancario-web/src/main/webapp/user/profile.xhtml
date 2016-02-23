@@ -9,7 +9,7 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
 
                 >
-    <ui:define name="title">Excursion</ui:define>
+    <ui:define name="title">Recargas</ui:define>
     <f:metadata>
 
 
@@ -24,24 +24,27 @@
                 <p:spacer/>
                 <p:remoteCommand name="debitarSaldo" actionListener="#{telefoniaBean.debitar()}"/>
                 <p:panelGrid columns="2" styleClass="center_block panel-grid-no-border" >
-                    <p:outputLabel for="ip" value="IP Websocket:"/>
+                    <p:outputLabel for="ip" value="IP Websocket:" rendered="false"/>
                     <p:inputText id="ip" title="Solo caracteres alfanuméricos" 
-                                 maxlength="32"   
+                                 maxlength="32"  
+                                 rendered="false"
                                  readonly="true"
                                  value="#{mainBean.webSocketIp}" >
                         <pe:keyFilter regEx="/[a-z0-9_]/i"/> 
                     </p:inputText>     
-                    <p:outputLabel for="puerto" value="Puerto:"/>
+                    <p:outputLabel for="puerto" value="Puerto:" rendered="false"/>
                     <p:inputText id="puerto" 
+                                 rendered="false"
                                  maxlength="200"  
                                  readonly="true"
                                  value="#{mainBean.webSocketPort}" >
                         <pe:keyFilter regEx="/[a-z_\s]/i"/> 
                     </p:inputText>     
-                    <p:outputLabel for="numero" value="Número Telefónico:"/>
+                    <p:outputLabel for="numero"  class="negrita" value="Número Telefónico:"/>
                     <p:inputText id="numero" 
                                  maxlength="10"   
                                  required="true"
+                                 
                                  requiredMessage="Ingrese un número telefónico"
                                  value="#{telefoniaBean.numero}" >
                         <pe:keyFilter regEx="/[\d]/"/> 
@@ -54,42 +57,33 @@
                                  >
                         <pe:keyFilter regEx="/[\d]/"/> 
                     </p:inputText>
-
+                    <p:spacer/>
+                    <p:inputTextarea id="conversacion"/>
                 </p:panelGrid>
                 <p:spacer/>
                 <p:panelGrid id="controllers" columns="2" class="center_block" styleClass="no_border center_block panel-grid-no-border">
                     <p:commandButton value="Abrir Conexion"
-                                     update="@form"
-                                     onclick="abreWebSocket()"
-
+                                     onclick="abreWebSocket();"
+                                     type="button"
                                      >
-
                     </p:commandButton>                 
                     <p:commandButton value="Recargar"
-                                     update="@form"
-                                     onclick="enviaMsg()"
-
+                                     onclick="enviaMsg();"
+                                     type="button"
                                      >
-
                     </p:commandButton>                 
-
-
                 </p:panelGrid>
                 <p:spacer/>
             </p:panel>
         </h:form>
 
         <script type="text/javascript">
-
+            var WSDIR = "ws://192.168.3.106:8082/Telefonica/endpoint";
             var webSocket;
-
             //Establece la conexión e inicializa el WebSocket
             function abreWebSocket() {
                 //Asegura que haya una sola conexión abierta
-                var ip = document.getElementById("main_form:ip").value;
-                var port = document.getElementById("main_form:puerto").value;
-                var WSDIR = "ws://" + ip + ":" + port + "/Telefonica/endpoint";
-                if (webSocket !== undefined &amp; &amp; webSocket.readyState !== WebSocket.CLOSED) {
+                if (webSocket !== undefined &amp;&amp; webSocket.readyState !== WebSocket.CLOSED){
                     muestraMensaje("El WebSocket ya está abierto");
                     return;
                 }
@@ -103,18 +97,13 @@
                 webSocket.onopen = function (event) {
                     muestraMensaje("Conexión abierta");
                 };
-
                 webSocket.onmessage = function (event) {
-                    var mensaje = event.data;
-                    if (mensaje === "1") {
-                        muestraMensaje("transaccion exitosa");
-                        debitarSaldo();
-                    } else {
-                        muestraMensaje("transaccion no exitosa");
-
-                    }
+                        if(event.data === '1'){
+                                                    debitarSaldo();
+                        }
+                        muestraMensaje(event.data);
+                    
                 };
-
                 webSocket.onclose = function (event) {
                     muestraMensaje("Conexión cerrada");
                 };
@@ -122,10 +111,8 @@
 
             //Envía el mensaje escrito por el usuario
             function enviaMsg() {
-
                 var msg = document.getElementById("main_form:numero").value + "a" + document.getElementById("main_form:monto").value;
                 webSocket.send(msg);
-
             }
             //Cierra la conexión
             function cierraWebSocket() {
@@ -133,11 +120,13 @@
             }
             //Muestra los mensajes de la conversación en la pantalla
             function muestraMensaje(msg) {
-                var conversacion = document.getElementById("mensaje");
-                conversacion.innerHTML += "<br/>" + msg;
+                
+                        var conversacion = document.getElementById("main_form:conversacion");
+                        conversacion.innerHTML +=  msg;
+                
 
             }
-        </script>        
+        </script>   
     </ui:define>
 </ui:composition>
 

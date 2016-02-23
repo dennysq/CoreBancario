@@ -63,5 +63,9 @@ public class TelefoniaBean {
     public void debitar() {
         System.out.println("hola");
     }
+    public void imprimir()
+    {
+        System.out.println("funciona");
+    }
 
 }
