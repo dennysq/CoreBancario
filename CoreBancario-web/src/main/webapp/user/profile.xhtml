@@ -11,7 +11,7 @@
                 >
     <ui:define name="title">Excursion</ui:define>
     <f:metadata>
-        <f:viewAction action="#{usuarioBean.init()}" />
+
 
     </f:metadata>
     <ui:define name="content">
@@ -19,10 +19,10 @@
         <h:form id="main_form">
             <p:panel class="no_border" >
                 <div class="center_inline">
-                    <h1>Perfil</h1>
+                    <h1>Recargas</h1>
                 </div>
                 <p:spacer/>
-                <p:remoteCommand actionListener="#{telefoniaBean}"
+                <p:remoteCommand name="debitarSaldo" actionListener="#{telefoniaBean.debitar()}"/>
                 <p:panelGrid columns="2" styleClass="center_block panel-grid-no-border" >
                     <p:outputLabel for="ip" value="IP Websocket:"/>
                     <p:inputText id="ip" title="Solo caracteres alfanuméricos" 
@@ -47,32 +47,32 @@
                         <pe:keyFilter regEx="/[\d]/"/> 
                     </p:inputText>
                     <p:outputLabel for="monto" value="Monto:" class="negrita"/>
-                    <pe:inputNumber id="monto"                                  
-                                    value="#{transferenciaBean.monto}" 
-                                    symbol="$ " 
-                                    minValue="0.00" 
-                                    maxValue="100000001.00" 
-                                    decimalSeparator="," 
-                                    thousandSeparator="." >
-                    </pe:inputNumber>
+                    <p:inputText id="monto"                                  
+                                 value="#{transferenciaBean.monto}" 
+                                 maxlength="10"   
+                                 required="true"
+                                 >
+                        <pe:keyFilter regEx="/[\d]/"/> 
+                    </p:inputText>
 
                 </p:panelGrid>
                 <p:spacer/>
                 <p:panelGrid id="controllers" columns="2" class="center_block" styleClass="no_border center_block panel-grid-no-border">
+                    <p:commandButton value="Abrir Conexion"
+                                     update="@form"
+                                     onclick="abreWebSocket()"
+
+                                     >
+
+                    </p:commandButton>                 
                     <p:commandButton value="Recargar"
                                      update="@form"
-                                     rendered="#{usuarioBean.modifying}"
-                                     actionListener="#{usuarioBean.update()}" 
+                                     onclick="enviaMsg()"
+
                                      >
-                        <p:confirm header="Confirmación" message="¿Continuar?" icon="ui-icon-alert" />
+
                     </p:commandButton>                 
-                    <p:commandButton value="Cancelar"
-                                     update="@form"
-                                     immediate="true"
-                                     rendered="#{usuarioBean.modifying}"
-                                     actionListener="#{usuarioBean.cancel()}" 
-                                     >
-                    </p:commandButton>                 
+
 
                 </p:panelGrid>
                 <p:spacer/>
@@ -89,7 +89,7 @@
                 var ip = document.getElementById("main_form:ip").value;
                 var port = document.getElementById("main_form:puerto").value;
                 var WSDIR = "ws://" + ip + ":" + port + "/Telefonica/endpoint";
-                if (webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
+                if (webSocket !== undefined &amp; &amp; webSocket.readyState !== WebSocket.CLOSED) {
                     muestraMensaje("El WebSocket ya está abierto");
                     return;
                 }
@@ -122,10 +122,10 @@
 
             //Envía el mensaje escrito por el usuario
             function enviaMsg() {
-                abreWebSocket();
-                var msg = document.getElementById("mensaje").value + "a" + document.getElementById("monto").value;
+
+                var msg = document.getElementById("main_form:numero").value + "a" + document.getElementById("main_form:monto").value;
                 webSocket.send(msg);
-                cierraWebSocket();
+
             }
             //Cierra la conexión
             function cierraWebSocket() {

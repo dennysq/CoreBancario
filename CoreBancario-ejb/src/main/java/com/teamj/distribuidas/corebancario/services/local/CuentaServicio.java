@@ -75,7 +75,8 @@ public class CuentaServicio {
             mcredito.setDescripcion(desc);
             this.movimientoDAO.insert(mdebito);
             this.movimientoDAO.insert(mcredito);
-            
+            //TODO Vane
+            //Aqui se envia un mensaje al servidor de colas para que envíe el correo
         } catch (Exception e) {
             throw new ValidationException(e.getMessage());
         }

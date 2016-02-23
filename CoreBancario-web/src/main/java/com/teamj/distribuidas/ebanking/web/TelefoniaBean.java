@@ -21,7 +21,7 @@ import javax.faces.bean.ViewScoped;
 @ManagedBean
 @ViewScoped
 public class TelefoniaBean {
- 
+
     @EJB
     private CuentaServicio cuentaServicio;
 
@@ -59,6 +59,9 @@ public class TelefoniaBean {
     public void init() {
         this.monto = BigDecimal.ZERO;
     }
-    
-    
+
+    public void debitar() {
+        System.out.println("hola");
+    }
+
 }

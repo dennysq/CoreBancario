@@ -57,7 +57,8 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
                 mcredito.setSaldo(cred.getSaldo());
                 mcredito.setDescripcion("OP. VENTANILLA DEPOSITO");
                 this.movimientoDAO.insert(mcredito);
-                
+                //TODO Vane
+            //Aqui se envia un mensaje al servidor de colas para que envíe el correo
                 return true;
             } catch (Exception e) {
                 return false;
@@ -94,6 +95,8 @@ public class CuentaServicioRemote implements CuentaServicioInterface {
                     mdebito.setSaldo(deb.getSaldo());
                     mdebito.setDescripcion("OP. VENTANILLA RETIRO");
                     this.movimientoDAO.insert(mdebito);
+                    //TODO Vane
+            //Aqui se envia un mensaje al servidor de colas para que envíe el correo
                     return true;
                 } catch (Exception e) {
                     throw new ValidationException(e.getMessage());
